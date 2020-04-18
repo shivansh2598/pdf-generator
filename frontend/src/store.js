@@ -1,7 +1,7 @@
 import { observable, action, decorate } from "mobx";
 
 class DocumentStore {
-  doucment = [];
+  documents = [];
 
   setDocuments(documents) {
     this.documents = documents;
@@ -9,7 +9,7 @@ class DocumentStore {
 }
 
 DocumentStore = decorate(DocumentStore, {
-  documents: observalbe,
+  documents: observable,
   setDocuments: action,
 });
 

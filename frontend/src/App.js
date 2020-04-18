@@ -4,6 +4,8 @@ import { Router, Route } from "react-router-dom";
 import { createBrowserHistory as createHistory } from "history";
 import "./App.css"
 import TopBar from "./TopBar";
+import { DocumentStore } from "./store"
+const documentStore = new DocumentStore();
 
 const history = createHistory();
 

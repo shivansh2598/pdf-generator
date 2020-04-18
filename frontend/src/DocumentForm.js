@@ -1,21 +1,20 @@
 import React from "react";
 import * as yup from "yup";
+import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { observer } from "mobx-react";
+import { Formik, Field } from "formik";
 import { addDocument, editDocument, getDocuments, APIURL } from "./request";
-import CKEditor from "@ckediotr/ckeditor5-react";
+import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-
 const schema = yup.object({
-  name: yup.string().required("Name is required"),
+  name: yup.string().required("Name is required")
 });
-
 function DocumentForm({ documentStore, edit, onSave, doc }) {
-  const [content, setContent] = React.usetState("");
+  const [content, setContent] = React.useState("");
   const [dirty, setDirty] = React.useState(false);
-
-  const handleSubmit = async (evt) => {
+  const handleSubmit = async evt => {
     const isValid = await schema.validate(evt);
     if (!isValid || !content) {
       return;
@@ -28,13 +27,11 @@ function DocumentForm({ documentStore, edit, onSave, doc }) {
     }
     getAllDocuments();
   };
-
   const getAllDocuments = async () => {
     const response = await getDocuments();
     documentStore.setDocuments(response.data);
     onSave();
   };
-
   return (
     <>
       <Formik
@@ -49,10 +46,10 @@ function DocumentForm({ documentStore, edit, onSave, doc }) {
           values,
           touched,
           isInvalid,
-          errors,
+          errors
         }) => (
           <Form noValidate onSubmit={handleSubmit}>
-            <From.Row>
+            <Form.Row>
               <Form.Group as={Col} md="12" controlId="name">
                 <Form.Label>Name</Form.Label>
                 <Form.Control
@@ -67,15 +64,14 @@ function DocumentForm({ documentStore, edit, onSave, doc }) {
                   {errors.name}
                 </Form.Control.Feedback>
               </Form.Group>
-            </From.Row>
-
+            </Form.Row>
             <Form.Row>
               <Form.Group as={Col} md="12" controlId="content">
-                <Form.label>Content</Form.label>
+                <Form.Label>Content</Form.Label>
                 <CKEditor
                   editor={ClassicEditor}
                   data={content || ""}
-                  onInit={(editor) => {
+                  onInit={editor => {
                     if (edit) {
                       setContent(doc.document);
                     }
@@ -87,8 +83,9 @@ function DocumentForm({ documentStore, edit, onSave, doc }) {
                   }}
                   config={{
                     ckfinder: {
-                      uploadUrl: `${APIURL}/pdf/uploadImage`,
-                    },
+                      uploadUrl:
+                        `${APIURL}/pdf/uploadImage`
+                    }
                   }}
                 />
                 <div className="content-invalid-feedback">
@@ -96,9 +93,8 @@ function DocumentForm({ documentStore, edit, onSave, doc }) {
                 </div>
               </Form.Group>
             </Form.Row>
-
-            <Button type="submit" style= {{ marginRight: 10 }}>
-                save
+            <Button type="submit" style={{ marginRight: 10 }}>
+              Save
             </Button>
             <Button type="button">Cancel</Button>
           </Form>
@@ -107,5 +103,4 @@ function DocumentForm({ documentStore, edit, onSave, doc }) {
     </>
   );
 }
-
 export default observer(DocumentForm);
